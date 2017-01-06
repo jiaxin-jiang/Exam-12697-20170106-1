@@ -18,7 +18,7 @@
 
 ##	4启动命令
 
-* mvn clean compile
+* mvn war:war
 * mvn jetty:run
 
 ##	5访问页面
