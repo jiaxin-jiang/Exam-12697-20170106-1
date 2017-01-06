@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjx.mapper.LanguageMapper">
+  <resultMap id="LanguageMapper" type="com.jjx.bean.Language">
+    <id column="language_id" property="languageId" />
+    <result column="name" property="name" />
+    <result column="last_update" property="lastUpdate" />
+  </resultMap>
+  <select id="selectLanguageByLanguageId" parameterType="java.lang.Byte" resultMap="LanguageMapper">
+    select language_id
+    from `language`
+    where language_id = #{languageId}
+  </select>
+
+  <select id="showAllLanguage" resultMap="LanguageMapper">
+    SELECT * FROM `language`
+  </select>
+</mapper>

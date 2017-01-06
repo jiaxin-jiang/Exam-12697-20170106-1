@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Update Film Info</title>
+    <link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script src="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        *{
+            font-family:"Microsoft YaHei UI",sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid center-block" style="margin-top: 20px;">
+    <h2 class="text-center">Update Film Info</h2>
+    <form action="/update" method="get" id="filmInfo" name="filmInfo">
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+
+        var defInfo = {
+            filmId: GetRequest()["filmId"]
+        };
+        $.ajax({
+            url: "/updateFilm",
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json",
+            data: defInfo,
+            success: function (data) {
+                $('#filmInfo').empty();
+                var fi = "";
+                fi+="<input name='filmId'  type='hidden' value='"+data.film.filmId+"'>";
+                fi += "<div class='col-xs-8 col-xs-offset-2'><div class='input-group'><span class='input-group-addon'>title:</span><input class='form-control' name='title' type='text' value='" + data.film.title + "' ></div></div>";
+                fi += "<div class='col-xs-8 col-xs-offset-2' style='margin-top: 20px;'><div class='input-group'><span class='input-group-addon'>language:</span><select class='form-control' name='languageId'>"
+
+                $.each(data.languages, function (key, val) {
+                    if (val.languageId == data.film.languageId) {
+                        fi += "<option selected='selected' value=" + val.languageId + ">" + val.name + "</option>";
+
+                    }
+                    else {
+                        fi += "<option value=" + val.languageId + ">" + val.name + "</option>";
+                    }
+                });
+                fi += "</select></div></div>";
+                fi += "<div class='col-xs-8 col-xs-offset-2' style='margin-top: 20px;'><div class='input-group'><span class='input-group-addon'>description:</span><textarea class='form-control' name='description'>'" + data.film.description + "'</textarea></div></div><div class='col-xs-2'></div>";
+
+                fi+="<input type='submit' style='margin-top: 20px;'  class='btn btn-primary col-xs-8 col-xs-offset-2' value='Update'>";
+                $('#filmInfo').append(fi);
+            }
+        });
+    });
+
+    function GetRequest() {
+        //获取url中"?"符后的字串
+        var url = location.search;
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+</script>
+</body>
+</html>

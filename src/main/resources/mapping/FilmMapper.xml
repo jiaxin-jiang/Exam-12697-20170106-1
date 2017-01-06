@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjx.mapper.FilmMapper">
+    <resultMap id="FilmMapper" type="com.jjx.bean.Film">
+        <id column="film_id" property="filmId"/>
+        <result column="title" property="title"/>
+        <result column="language_id" property="languageId"/>
+        <result column="description" property="description"/>
+        <association property="language" javaType="com.jjx.bean.Language">
+            <id column="language_id" property="languageId"/>
+            <result column="name" property="name"/>
+            <result column="last_update" property="lastUpdate"/>
+        </association>
+    </resultMap>
+
+    <select id="selectByFilmId" parameterType="java.lang.Short" resultMap="FilmMapper">
+    SELECT *
+    FROM `film` f,`language` l
+    WHERE f.language_id = l.language_id
+    AND film_id = #{filmId}
+  </select>
+
+    <select id="showAllFilm" parameterType="com.jjx.bean.Page" resultMap="FilmMapper">
+        SELECT * FROM `film` f ,`language` l WHERE f.language_id = l.language_id
+        <if test="film.filmId !=null">
+            AND film_id LIKE CONCAT('%', CONCAT(#{film.filmId}, '%'))
+        </if>
+        <if test="film.title !=null">
+            AND title LIKE CONCAT('%', CONCAT(#{film.title}, '%'))
+        </if>
+        LIMIT #{startPos},#{pageSize}
+    </select>
+
+    <select id="selectCount" parameterType="com.jjx.bean.Page" resultType="java.lang.Integer">
+
+        SELECT COUNT(1) FROM `film` f ,`language` l WHERE f.language_id = l.language_id
+        <if test="film.filmId !=null">
+            AND film_id LIKE CONCAT('%', CONCAT(#{film.filmId}, '%'))
+        </if>
+        <if test="film.title !=null">
+            AND title LIKE CONCAT('%', CONCAT(#{film.title}, '%'))
+        </if>
+    </select>
+    <update id="updateByFilmId" parameterType="com.jjx.bean.Film">
+        update `film`
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="languageId != null">
+                language_id = #{languageId},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+        </set>
+        where film_id = #{filmId}
+    </update>
+
+    <insert id="insertFilm" parameterType="com.jjx.bean.Film">
+        insert into `film`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="languageId != null">
+                language_id,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title},
+            </if>
+
+            <if test="languageId != null">
+                #{languageId},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+        </trim>
+    </insert>
+    <delete id="delFilm" parameterType="java.lang.Short">
+        DELETE FROM film WHERE film_id =#{filmId}
+    </delete>
+</mapper>

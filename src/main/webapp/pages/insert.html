@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Insert Film</title>
+    <link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script src="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .col-xs-offset-2{
+            margin-top: 20px;
+        }
+        *{
+            font-family:"Microsoft YaHei UI",sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid center-block" style="margin-top: 20px;">
+    <h2 class="text-center">Insert Film</h2>
+<form action="/insertFilm" method="get">
+    <div class='col-xs-8 col-xs-offset-2'>
+        <div class='input-group'>
+            <span class='input-group-addon'>title</span>
+            <input name='title' class='form-control' type='text'>
+        </div>
+    </div>
+    <div class='col-xs-8 col-xs-offset-2'>
+        <div class='input-group'>
+            <span class='input-group-addon'>description</span>
+            <input  class='form-control' name="description" id="description" type='text'>
+        </div>
+    </div>
+    <div class='col-xs-8 col-xs-offset-2'>
+        <div class='input-group'>
+            <span class='input-group-addon'>language</span>
+            <select name='languageId' id="languageId" class="form-control"></select>
+        </div>
+    </div>
+        <input type='submit' class="col-xs-8 col-xs-offset-2 btn btn-primary col-xs-8 col-xs-offset-2" value='Insert'>
+</form>
+</div>
+<script>
+    $(function () {
+        $.ajax({
+            url: "/languages",
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json",
+            success: function (data) {
+                $('#languageId').empty();
+                var fi = "";
+                $.each(data, function (key, val) {
+
+                    fi += "<option value=" + val.languageId + ">" + val.name + "</option>";
+                });
+                $('#languageId').append(fi);
+            }
+        });
+    });
+</script>
+</body>
+</html>
